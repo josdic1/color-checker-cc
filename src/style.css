@@ -25,9 +25,27 @@ a:hover {
 body {
   margin: 0;
   display: flex;
-  place-items: center;
+  flex-direction: column;
+  align-items: center;
   min-width: 320px;
   min-height: 100vh;
+  padding: 2rem;
+}
+
+#color-cube {
+  width: 150px;
+  height: 150px;
+  background-color: '';
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5em;
+  font-weight: bold;
+  color: '';
+  border: none;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  transition: background-color 0.3s ease-in-out;
 }
 
 h1 {
