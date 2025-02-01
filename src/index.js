@@ -5,6 +5,7 @@ const init = () => {
   /** --------------------- DOM Elements--------------------- **/
 
   const cube = document.getElementById("color-cube")
+  const form = document.getElementById("color-form")
   const list = document.getElementById("color-list")
 
   /** --------------------- STATEFUL VARS--------------------- **/
@@ -32,7 +33,43 @@ const init = () => {
     cube.innerHTML = cubeHtml
   }
 
+  function renderColorForm() {
+    const formHtml =
+      `    <label for="title" > Color </label>
+    <input id='title' name='title' placeholder='Color name here...' />
+    <label for="code" > Code </label>
+    <input id='code' name='code' placeholder='Include #...' />
+    <div id="form-btns">
+      <button type='button' name='test' id='test'>Test</button>
+         <button type='button' name='submit' id='submit'>Submit</button>
+            <button type='button' name='clear' id='clear'>Clear</button>
+    </div>
+    `
 
+    form.innerHTML = formHtml
+
+    const testBtn = document.getElementById("test")
+    testBtn.addEventListener('click', function () {
+      let codeVal = document.getElementById('code').value || alert('empty code')
+      formData = {
+        code: codeVal
+      }
+      if (codeVal) {
+        renderColorCube(codeVal)
+      } else {
+        console.error('empty code')
+      }
+    })
+
+    document.getElementById('code').value || "#333333"
+    testBtn.addEventListener('click', function (e) {
+      const { id, value } = e.target
+      if (id === "test" && value) {
+        console.log(value)
+      }
+    })
+
+  }
 
   function renderColorList(data) {
 
@@ -95,6 +132,7 @@ const init = () => {
       const mostRecentColor = data[data.length - 1].code
       renderColorCube(mostRecentColor)
       renderColorList(data)
+      renderColorForm()
       colors = data
     } catch (error) { console.error('GET: ', error) }
   }
