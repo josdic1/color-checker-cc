@@ -92,8 +92,8 @@ const init = () => {
         throw new Error('Bad GET response')
       }
       const data = await r.json()
-      const defaultColor = data[0].code
-      renderColorCube(defaultColor)
+      const mostRecentColor = data[data.length - 1].code
+      renderColorCube(mostRecentColor)
       renderColorList(data)
       colors = data
     } catch (error) { console.error('GET: ', error) }
