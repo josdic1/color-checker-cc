@@ -24,12 +24,11 @@ const init = () => {
 
   /** --------------------- 🎨 RENDER FUNCTIONS --------------------- **/
 
-  function renderColorCube() {
+  function renderColorCube(colorCode) {
 
 
     const cubeHtml =
-      `   <h1 id="colorCube" style="{ 'color': 'red'}">COLOR</h1>`
-
+      `<h1 id="colorCube" style="color: ${colorCode}">COLOR</h1>`;
     cube.innerHTML = cubeHtml
   }
 
@@ -93,7 +92,8 @@ const init = () => {
         throw new Error('Bad GET response')
       }
       const data = await r.json()
-      renderColorCube()
+      const defaultColor = data[0].code
+      renderColorCube(defaultColor)
       renderColorList(data)
       colors = data
     } catch (error) { console.error('GET: ', error) }
