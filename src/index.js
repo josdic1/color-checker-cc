@@ -130,6 +130,8 @@ const init = () => {
           case 'edit':
             inEditMode = true
             return populateForm(colorObj.title, colorObj.code)
+          case 'del':
+            return deleteColor(colorObj.id)
         }
       }
     })
@@ -201,6 +203,19 @@ const init = () => {
     } catch (error) { console.error(error) }
   }
 
+  async function deleteColor(delColor) {
+    try {
+      const r = await fetch(`http://localhost:3000/colors/${delColor}`, {
+        method: "DELETE",
+      })
+      if (!r.ok) {
+        throw new Error('fetch error in DELETE')
+      }
+      const data = await r.json()
+      const updatedList = colors.filter(color => color.id === data.id)
+      fetchColors(updatedList)
+    } catch (error) { console.error(error) }
+  }
 
 
   /** --------------------- 🗑️ CLEANUP FUNCTIONS --------------------- **/
