@@ -54,6 +54,7 @@ const init = () => {
 
     form.innerHTML = formHtml
 
+
     const testBtn = document.getElementById("test")
     testBtn.addEventListener('click', function () {
       let titleVal = document.getElementById('title').value || ''
@@ -132,6 +133,8 @@ const init = () => {
             return populateForm(colorObj.title, colorObj.code)
           case 'del':
             return deleteColor(colorObj.id)
+          default:
+            break;
         }
       }
     })
@@ -160,6 +163,12 @@ const init = () => {
     if (!inEditMode) {
       const newColor = formData
       createColor(newColor)
+    } else {
+      const updatedColor = {
+        id: selectedColor.id,
+        ...formData
+      }
+      updateColor(updatedColor)
     }
     clearForm()
   }
@@ -216,6 +225,28 @@ const init = () => {
       fetchColors(updatedList)
     } catch (error) { console.error(error) }
   }
+
+  async function updateColor(editColor) {
+    try {
+      const r = await fetch(`http://localhost:3000/colors/${editColor.id}`, {
+        method: "PATCH",
+        headers: {
+          'Content-Type': 'application.json'
+        },
+        body: JSON.stringify(editColor)
+      })
+      if (!r.ok) {
+        throw new Error('fetch error in PATCH')
+      }
+      const data = await r.json()
+      const updatedList = colors.map(color => color.id === data.id ?
+        data : color
+      )
+      fetchColors(updatedList)
+    } catch (error) { console.error(error) }
+  }
+
+
 
 
   /** --------------------- 🗑️ CLEANUP FUNCTIONS --------------------- **/
