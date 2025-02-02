@@ -114,6 +114,25 @@ const init = () => {
       </table>`
 
     list.innerHTML = listHtml
+
+    let btnName;
+    let colorId;
+    list.addEventListener('click', function (e) {
+      const { id, tagName } = e.target
+      if (tagName === 'BUTTON') {
+        btnName = id.split('-')[0]
+        colorId = id.split('-')[1]
+        const colorObj = colors.find(color => color.id === colorId)
+        switch (btnName) {
+          case 'view':
+            selectedColor = colorObj
+            return renderColorCube(colorObj.code)
+        }
+      }
+
+
+    })
+
   }
 
 
