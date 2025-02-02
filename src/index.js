@@ -123,16 +123,22 @@ const init = () => {
         btnName = id.split('-')[0]
         colorId = id.split('-')[1]
         const colorObj = colors.find(color => color.id === colorId)
+        selectedColor = colorObj
         switch (btnName) {
           case 'view':
-            selectedColor = colorObj
             return renderColorCube(colorObj.code)
+          case 'edit':
+            inEditMode = true
+            return populateForm(colorObj.title, colorObj.code)
         }
       }
-
-
     })
 
+  }
+
+  function populateForm(title, code) {
+    document.getElementById('title').value = title
+    document.getElementById('code').value = code
   }
 
 
@@ -140,13 +146,10 @@ const init = () => {
   /** --------------------- 🎯 HANDLER FUNCTIONS --------------------- **/
   function handleFormInput(e) {
     const { id, value } = e.target
-    if (!inEditMode) {
-      formData = {
-        ...formData,
-        [id]: value
-      }
+    formData = {
+      ...formData,
+      [id]: value
     }
-
   }
 
 
