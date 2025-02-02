@@ -1,104 +1,14 @@
 {
-   "colors": [
-      {
-         "title": "mocha-mousse",
-         "code": "#A47864",
-         "type": "earth tone"
-      },
-      {
-         "title": "peach-fuzz",
-         "code": "#F5C3A5",
-         "type": "pastel"
-      },
-      {
-         "title": "viva-magenta",
-         "code": "#BB2649",
-         "type": "vibrant"
-      },
-      {
-         "title": "very-peri",
-         "code": "#6667AB",
-         "type": "cool tone"
-      },
-      {
-         "title": "illuminating",
-         "code": "#F5DF4D",
-         "type": "bright"
-      },
-      {
-         "title": "ultimate-gray",
-         "code": "#939597",
-         "type": "neutral"
-      },
-      {
-         "title": "classic-blue",
-         "code": "#0F4C81",
-         "type": "deep tone"
-      },
-      {
-         "title": "living-coral",
-         "code": "#FF6F61",
-         "type": "warm tone"
-      },
-      {
-         "title": "ultra-violet",
-         "code": "#5F4B8B",
-         "type": "cool tone"
-      },
-      {
-         "title": "greenery",
-         "code": "#88B04B",
-         "type": "earth tone"
-      },
-      {
-         "title": "rose-quartz",
-         "code": "#F7CAC9",
-         "type": "pastel"
-      },
-      {
-         "title": "serenity",
-         "code": "#91A8D0",
-         "type": "pastel"
-      },
-      {
-         "title": "marsala",
-         "code": "#964F4C",
-         "type": "earth tone"
-      },
-      {
-         "title": "radiant-orchid",
-         "code": "#B565A7",
-         "type": "vibrant"
-      },
-      {
-         "title": "emerald",
-         "code": "#009473",
-         "type": "rich tone"
-      },
-      {
-         "title": "tangerine-tango",
-         "code": "#DD4124",
-         "type": "vibrant"
-      },
-      {
-         "title": "honeysuckle",
-         "code": "#D94F70",
-         "type": "bright"
-      },
-      {
-         "title": "turquoise",
-         "code": "#45B5AA",
-         "type": "cool tone"
-      },
-      {
-         "title": "mimosa",
-         "code": "#F0C05A",
-         "type": "warm tone"
-      },
-      {
-         "title": "blue-iris",
-         "code": "#5A5B9F",
-         "type": "deep tone"
-      }
-   ]
+  "colors": [
+    {
+      "title": "fountain-blue",
+      "code": "#57b6c2",
+      "id": "2f5f"
+    },
+    {
+      "id": "c5ea",
+      "title": "ocean-blue",
+      "code": "#1E90FF"
+    }
+  ]
 }

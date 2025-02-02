@@ -3,7 +3,7 @@
 const init = () => {
 
   /** --------------------- DOM Elements--------------------- **/
-
+  const message = document.getElementById("color-message")
   const cube = document.getElementById("color-cube")
   const form = document.getElementById("color-form")
   const list = document.getElementById("color-list")
@@ -19,58 +19,62 @@ const init = () => {
 
   fetchColors()
 
-  /** ---------------------EVENT HANDLERS  --------------------- **/
-
+  /** ---------------------EVENT LISTENERS  --------------------- **/
+  form.addEventListener('input', handleFormInput)
+  form.addEventListener('submit', handleSubmitClick)
 
 
   /** --------------------- 🎨 RENDER FUNCTIONS --------------------- **/
 
-  function renderColorCube(colorCode) {
+  //message center
+  function renderMessage() {
 
+  }
+
+  // color cube
+  function renderColorCube(colorCode) {
 
     const cubeHtml =
       `<h1 id="colorCube" style="color: ${colorCode}">COLOR</h1>`;
     cube.innerHTML = cubeHtml
+
   }
 
+  // color form
   function renderColorForm() {
     const formHtml =
       `    <label for="title" > Color </label>
     <input id='title' name='title' placeholder='Color name here...' />
     <label for="code" > Code </label>
     <input id='code' name='code' placeholder='Include #...' />
-    <div id="form-btns">
       <button type='button' name='test' id='test'>Test</button>
-         <button type='button' name='submit' id='submit'>Submit</button>
+         <button type='submit' name='submit' id='submit'>Submit</button>
             <button type='button' name='clear' id='clear'>Clear</button>
-    </div>
     `
 
     form.innerHTML = formHtml
 
     const testBtn = document.getElementById("test")
     testBtn.addEventListener('click', function () {
-      let codeVal = document.getElementById('code').value || alert('empty code')
+      let titleVal = document.getElementById('title').value || ''
+      let codeVal = document.getElementById('code').value || ""
       formData = {
+        title: titleVal,
         code: codeVal
       }
       if (codeVal) {
         renderColorCube(codeVal)
       } else {
-        console.error('empty code')
+        renderColorCube("#fff")
       }
     })
 
-    document.getElementById('code').value || "#333333"
-    testBtn.addEventListener('click', function (e) {
-      const { id, value } = e.target
-      if (id === "test" && value) {
-        console.log(value)
-      }
-    })
 
+    const clearBtn = document.getElementById("clear")
+    clearBtn.addEventListener('click', clearForm)
   }
 
+  // color list
   function renderColorList(data) {
 
     const listMap = data.map(item => (
@@ -82,10 +86,10 @@ const init = () => {
             <button type='button' button id='view-${item.id}'>View</button>
           </td>
           <td>  
-            <button type='button' button id='view-${item.id}'>Edit</button>
+            <button type='button' button id='edit-${item.id}'>Edit</button>
           </td>
           <td>  
-            <button type='button' button id='view-${item.id}'>Del</button>
+            <button type='button' button id='del-${item.id}'>Del</button>
           </td>
       </tr>`
     ))
@@ -105,7 +109,7 @@ const init = () => {
           </tr>
         </thead>
         <tbody>
-          ${listMap}
+          ${listMap.join('')}
         </tbody>
       </table>`
 
@@ -115,7 +119,26 @@ const init = () => {
 
 
   /** --------------------- 🎯 HANDLER FUNCTIONS --------------------- **/
+  function handleFormInput(e) {
+    const { id, value } = e.target
+    if (!inEditMode) {
+      formData = {
+        ...formData,
+        [id]: value
+      }
+    }
 
+  }
+
+
+  function handleSubmitClick(e) {
+    e.preventDefault()
+    if (!inEditMode) {
+      const newColor = formData
+      createColor(newColor)
+    }
+    clearForm()
+  }
 
   /** --------------------- 🛠️ UTILITY FUNCTIONS --------------------- **/
 
@@ -130,6 +153,7 @@ const init = () => {
       }
       const data = await r.json()
       const mostRecentColor = data[data.length - 1].code
+      renderMessage()
       renderColorCube(mostRecentColor)
       renderColorList(data)
       renderColorForm()
@@ -137,8 +161,33 @@ const init = () => {
     } catch (error) { console.error('GET: ', error) }
   }
 
-  /** --------------------- 🗑️ CLEANUP FUNCTIONS --------------------- **/
+  async function createColor(newColor) {
+    try {
+      const r = await fetch(`http://localhost:3000/colors`, {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application.json'
+        },
+        body: JSON.stringify(newColor)
+      })
+      if (!r.ok) {
+        throw new Error('fetch error in POST')
+      }
+      const data = await r.json()
+      const updatedList = [...colors, data]
+      fetchColors(updatedList)
+    } catch (error) { console.error(error) }
+  }
 
+
+
+  /** --------------------- 🗑️ CLEANUP FUNCTIONS --------------------- **/
+  //clear form
+  function clearForm() {
+    document.getElementById('title').value = ''
+    document.getElementById('code').value = ''
+    inEditMode = false
+  }
 
   /** --------------------- 🚀 INIT APP --------------------- **/
 
