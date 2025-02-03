@@ -225,7 +225,7 @@ const init = () => {
   }
 
   async function createColor(color) {
-
+    let mess;
     const newColor = color
     try {
       const r = await fetch(`http://localhost:3000/colors`, {
@@ -240,10 +240,10 @@ const init = () => {
       }
       const data = await r.json()
       const updatedList = [...colors, data]
-      colors.push(data); // ✅ Only add if json-server confirms it
-      await fetchColors(); // ✅ Refresh from json-server to ensure sync
-
-
+      mess = updatedList.length === colors.length ? "Nahh" : "Successfuly created"
+      colors = updatedList
+      fetchColors()
+      renderMessage(mess)
     } catch (error) { console.error('POST: ', error) }
   }
 
