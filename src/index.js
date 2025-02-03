@@ -1,6 +1,6 @@
 /** --------------------- 🏗️ INITIAL SETUP --------------------- **/
 
-import { titleCleaner, codeCleaner } from "./helper.js"
+
 const init = () => {
 
   /** --------------------- DOM Elements--------------------- **/
@@ -27,15 +27,11 @@ const init = () => {
 
   /** --------------------- 🎨 RENDER FUNCTIONS --------------------- **/
 
-  //message center
-  function renderMessage() {
-
-  }
 
   // color cube
   function renderColorCube() {
 
-
+    const reformattedTitle = rawTitle.replace(/[^a-zA-Z-]/g, '-').toLowerCase()
 
   }
 
@@ -69,14 +65,6 @@ const init = () => {
       }
     })
 
-
-    const clearBtn = document.getElementById("clear")
-    clearBtn.addEventListener('click', clearForm)
-    function clearForm() {
-      document.getElementById('title').value = ''
-      document.getElementById('code').value = ''
-      inEditMode = false
-    }
   }
 
   // color list
@@ -125,15 +113,22 @@ const init = () => {
     list.addEventListener('click', function (e) {
       const { id, tagName } = e.target
       if (tagName === 'BUTTON') {
-        btnName = id.split('-')[0]
-        colorId = id.split('-')[1]
+        btnName = id.split('-')[0].trim()
+        colorId = id.split('-')[1].trim()
         const colorObj = colors.find(color => color.id === colorId)
         selectedColor = colorObj
+
+        console.log("Button Clicked:", id);
+        console.log("Extracted btnName:", btnName);
+        console.log("Extracted colorId:", colorId);
+        console.log("Existing Colors:", colors.map(c => c.id));
+
         switch (btnName) {
           case 'view':
             return renderColorCube(colorObj)
           case 'edit':
             inEditMode = true
+
             return populateForm(colorObj)
           case 'del':
             return deleteColor(colorObj)
@@ -156,61 +151,58 @@ const init = () => {
   /** --------------------- 🎯 HANDLER FUNCTIONS --------------------- **/
 
   function handleFormInput(e) {
-    let objToReformat = {}
+
     const { id, value } = e.target
-    if (!inEditMode) {
-      formData = {
-        ...formData,
-        [id]: value
-      }
-      objToReformat = formData
-    } else {
-      if (inEditMode) {
-        selectedColor = {
-          ...selectedColor,
-          [id]: value
-        }
-        objToReformat = selectedColor
-      }
+    formData = {
+      ...formData,
+      [id]: value
     }
-    reformatter(objToReformat)
+    const obj = formData
+    processFormInput(obj)
+
   }
 
+  function processFormInput(obj) {
 
-  function reformatter(obj) {
-    console.log('inedItMode: ', inEditMode + obj)
-    let cleanTitle = titleCleaner(obj.title)
-    let cleanCode = codeCleaner(obj.code)
-    if (!inEditMode) {
-      formData = {
-        ...obj,
+    const cleanTitle = titleCleaner(obj.title)
+    const cleanCode = codeCleaner(obj.code)
+
+    if (inEditMode) {
+      selectedColor = {
+        ...selectedColor,
         title: cleanTitle,
         code: cleanCode
       }
     } else {
-      selectedColor = {
-        ...obj,
-        title: cleanTitle,
-        code: cleanCode
+      if (!inEditMode) {
+        formData = {
+          ...formData,
+          title: cleanTitle,
+          code: cleanCode
+        }
       }
-
     }
-    console.log('formData: ', formData)
-    console.log('selectedColor: ', selectedColor)
+
   }
 
 
   function handleSubmitClick(e) {
     e.preventDefault()
-    let objToSubmit;
 
     if (inEditMode) {
-      objToSubmit = selectedColor
-      updateColor(objToSubmit)
+      const updatedObj = selectedColor
+      updateColor(updatedObj)
     } else {
-      objToSubmit = formData
-      createColor(objToSubmit)
+      if (!inEditMode) {
+        setTimeout(() => {
+          colors = colors.filter(color => color.id !== strId);
+          renderColorList(colors);
+        }, 100);
+        const newColor = formData
+        createColor(newColor)
+      }
     }
+
   }
 
   /** --------------------- 🛠️ UTILITY FUNCTIONS --------------------- **/
@@ -219,6 +211,7 @@ const init = () => {
   /** --------------------- 📡 API CALLS --------------------- **/
 
   async function fetchColors() {
+
     try {
       const r = await fetch(`http://localhost:3000/colors`)
       if (!r.ok) {
@@ -226,52 +219,69 @@ const init = () => {
       }
       const data = await r.json()
       const mostRecentColor = data[data.length - 1].code
-      renderMessage()
+      colors = data
+
       renderColorCube(mostRecentColor)
       renderColorList(data)
       renderColorForm()
-      colors = data
+
     } catch (error) { console.error('GET: ', error) }
   }
 
   async function createColor(newColor) {
+    const objectToAdd = {
+      ...newColor
+    }
+
     try {
       const r = await fetch(`http://localhost:3000/colors`, {
         method: "POST",
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(newColor)
+        body: JSON.stringify(objectToAdd)
       });
-
       if (!r.ok) {
         throw new Error("fetch error in POST");
       }
       const data = await r.json();
-      console.log('created color: ', data)
       const updatedList = [...colors, data]
-      await fetchColors();
+      await fetchColors()
     } catch (error) {
       console.error(error);
     }
+
   }
 
 
   async function deleteColor(colorObj) {
-    const updatedList = colors.filter(color => color.id !== colorObj.id)
+    if (!colorObj?.id) {
+      console.error("Invalid color ID");
+      return;
+    }
+
+    const strId = String(colorObj.id).trim();
+    const url = `http://localhost:3000/colors/${encodeURIComponent(strId)}`;
+
+    console.log(`Attempting DELETE: ${url}`);
+
     try {
-      const r = await fetch(`http://localhost:3000/colors/${colorObj.id}`, {
-        method: 'DELETE'
-      })
-      if (!r.ok) {
-        throw new Error("fetch error in DELETE");
-      }
-      await fetchColors();
-    } catch (error) { console.error(error) }
+      const r = await fetch(url, { method: 'DELETE' });
+
+      if (!r.ok) throw new Error(`DELETE failed: ${r.status} ${r.statusText}`);
+
+      console.log(`Deleted color: ${strId}`);
+
+      colors = colors.filter(color => color.id !== strId);
+      renderColorList(colors);
+
+    } catch (error) {
+      console.error("DELETE error:", error);
+    }
   }
 
-
   async function updateColor(editColor) {
+
     try {
       const r = await fetch(`http://localhost:3000/colors/${editColor.id}`, {
         method: "PATCH",
@@ -284,6 +294,7 @@ const init = () => {
         throw new Error('fetch error in PATCH')
       }
       await fetchColors()
+
     } catch (error) { console.error(error) }
   }
 
@@ -291,10 +302,21 @@ const init = () => {
 
 
   /** --------------------- 🗑️ CLEANUP FUNCTIONS --------------------- **/
+  function cleanUp() {
+    console.log('cleanup started')
+    inEditMode = false
+    isLoading = true
+    document.getElementById('title').value = ''
+    document.getElementById('code').value = ''
+    formData = { title: '', code: '' }
+    selectedColor = { id: '', title: '', code: '' }
 
+  }
 
   /** --------------------- 🚀 INIT APP --------------------- **/
 
 }
 
 window.addEventListener("DOMContentLoaded", init)
+
+
