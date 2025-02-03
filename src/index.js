@@ -1,7 +1,7 @@
 const init = () => {
 
-  let loading = true
-  let editMode = false
+  let isLoading = true
+  let inEditMode = false
   let colors = []
 
   let formData = {
@@ -59,13 +59,28 @@ const init = () => {
     <label formHtml="codeInput">Code </label>
         <input type='text' id='codeInput' name='codeInput' placeholder="Color code..." />
         <div id="btn-menu">
-        <button type='button' id='testBtn' name='testBtn'>TEST</button>
-        <button type='submit' id='testBtn' name='testBtn'>TEST</button>
-        <button type='button' id='clearBtn' name='clearBtn'>CLEAR</button>      
+        <button type='button' id='test' name='test'>TEST</button>
+        <button type='submit' id='submit' name='test'>SUBMIT</button>
+        <button type='button' id='clear' name='clear'>CLEAR</button>      
         </div>
         `
 
     form.innerHTML = formHtml
+
+    document.getElementById('test').addEventListener('click', function (e) {
+      const { id } = e.target
+    })
+
+    document.getElementById('submit').addEventListener('submit', function (e) {
+      e.preventDefault()
+    })
+
+    document.getElementById('clear').addEventListener('click', function (e) {
+      const { id, name } = e.target
+      if (name === 'clear') {
+        clearForm()
+      }
+    })
 
   }
 
@@ -80,6 +95,17 @@ const init = () => {
       renderList(data)
       renderForm()
     } catch (error) { console.error(error) }
+  }
+
+
+  function clearForm() {
+    document.getElementById('colorInput').value = ''
+    document.getElementById('codeInput').value = ''
+  }
+
+  function cleanUp() {
+    inEditMode = false
+    isLoading = true
   }
 
 
