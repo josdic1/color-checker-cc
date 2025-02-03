@@ -2,7 +2,7 @@
 
 
 const init = () => {
-
+  // rawTitle.replace(/[^a-zA-Z-]/g, '-').toLowerCase()
   /** --------------------- DOM Elements--------------------- **/
   const message = document.getElementById("color-message")
   const cube = document.getElementById("color-cube")
@@ -26,15 +26,25 @@ const init = () => {
 
 
   /** --------------------- 🎨 RENDER FUNCTIONS --------------------- **/
+  //render message
+  function renderMessage(sysMessage) {
+    const messageHtml = `
+    <label for="messageText"> System message: </label>
+    <span id='messageText'>${sysMessage || ""}</span>
+    `
 
-
-  // color cube
-  function renderColorCube() {
-
-    const reformattedTitle = rawTitle.replace(/[^a-zA-Z-]/g, '-').toLowerCase()
-
+    message.innerHTML = messageHtml
   }
 
+  // color cube
+  function renderColorCube(colorObj) {
+    const { title, code } = colorObj
+    const colorCubeHtml =
+      `<h1 id="text" style="color: ${code}">${title || "EMPTY"}</h1>`
+
+    cube.innerHTML = colorCubeHtml
+
+  }
   // color form
   function renderColorForm() {
     const formHtml =
@@ -44,11 +54,9 @@ const init = () => {
     <input id='code' name='code' placeholder='Color code here...' />
       <button type='button' name='test' id='test'>Test</button>
          <button type='submit' name='submit' id='submit'>Submit</button>
-            <button type='button' name='clear' id='clear'>Clear</button>
-    `
+            <button type='button' name='clear' id='clear'>Clear</button>`
 
     form.innerHTML = formHtml
-
 
     const testBtn = document.getElementById("test")
     testBtn.addEventListener('click', function () {
@@ -58,11 +66,8 @@ const init = () => {
         title: titleVal,
         code: codeVal
       }
-      if (codeVal) {
-        renderColorCube(codeVal)
-      } else {
-        renderColorCube("#fff")
-      }
+      const colorToTest = formData
+      renderColorCube(colorToTest)
     })
 
   }
@@ -117,33 +122,29 @@ const init = () => {
         colorId = id.split('-')[1].trim()
         const colorObj = colors.find(color => color.id === colorId)
         selectedColor = colorObj
-
-        console.log("Button Clicked:", id);
-        console.log("Extracted btnName:", btnName);
-        console.log("Extracted colorId:", colorId);
-        console.log("Existing Colors:", colors.map(c => c.id));
-
-        switch (btnName) {
-          case 'view':
-            return renderColorCube(colorObj)
-          case 'edit':
+        if (btnName === "view") {
+          renderMessage(colorObj.code ? `Viewing ${colorObj.title}` : '')
+          renderColorCube(colorObj)
+        } else {
+          if (btnName === 'edit') {
             inEditMode = true
-
-            return populateForm(colorObj)
-          case 'del':
-            return deleteColor(colorObj)
-          default:
-            break;
+            renderMessage(inEditMode ? `In Edit Mode...updating ${colorObj.id}` : '')
+            populateForm(colorObj)
+          } else {
+            if (btnName === 'del') {
+              renderMessage(colorObj.id ? `ID to delete => ${colorObj.id}` : '')
+            }
+          }
         }
       }
     })
-
   }
 
   function populateForm(color) {
-    document.getElementById('title').value = color.title
-    document.getElementById('code').value = color.code
-    selectedColor = color
+    const { title, code } = color
+    document.getElementById('title').value = title
+    document.getElementById('code').value = code
+    renderMessage(`Form populated...${title} / ${code}`)
   }
 
 
@@ -151,7 +152,7 @@ const init = () => {
   /** --------------------- 🎯 HANDLER FUNCTIONS --------------------- **/
 
   function handleFormInput(e) {
-
+    renderMessage(inEditMode ? "handling form input (edit mode)" : "handling form input (create mode)")
     const { id, value } = e.target
     formData = {
       ...formData,
@@ -163,22 +164,17 @@ const init = () => {
   }
 
   function processFormInput(obj) {
-
-    const cleanTitle = titleCleaner(obj.title)
-    const cleanCode = codeCleaner(obj.code)
-
+    const { id, value } = obj
     if (inEditMode) {
       selectedColor = {
         ...selectedColor,
-        title: cleanTitle,
-        code: cleanCode
+        [id]: value
       }
     } else {
       if (!inEditMode) {
         formData = {
           ...formData,
-          title: cleanTitle,
-          code: cleanCode
+          [id]: value
         }
       }
     }
@@ -194,15 +190,10 @@ const init = () => {
       updateColor(updatedObj)
     } else {
       if (!inEditMode) {
-        setTimeout(() => {
-          colors = colors.filter(color => color.id !== strId);
-          renderColorList(colors);
-        }, 100);
         const newColor = formData
         createColor(newColor)
       }
     }
-
   }
 
   /** --------------------- 🛠️ UTILITY FUNCTIONS --------------------- **/
@@ -218,9 +209,10 @@ const init = () => {
         throw new Error('Bad GET response')
       }
       const data = await r.json()
-      const mostRecentColor = data[data.length - 1].code
+      const mostRecentColor = data[data.length - 1]
       colors = data
 
+      renderMessage()
       renderColorCube(mostRecentColor)
       renderColorList(data)
       renderColorForm()
