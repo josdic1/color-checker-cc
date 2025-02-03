@@ -1,14 +1,14 @@
 {
   "colors": [
     {
-      "id": "f751",
-      "title": "parkcity",
-      "code": "#111111"
+      "color": "Viva Magenta",
+      "dbColor": "viva-magenta",
+      "code": "181750 "
     },
     {
-      "id": "abf7",
-      "title": "dolgy",
-      "code": "#543543"
+      "color": "Peach Fuzz",
+      "dbColor": "peach-fuzz",
+      "code": "131023 "
     }
   ]
 }
