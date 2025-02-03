@@ -1,24 +1,14 @@
 {
   "colors": [
     {
-      "title": "fountain-blue",
-      "code": "#57b6c2",
-      "id": "2f5f"
+      "id": "80ef",
+      "title": "emerald",
+      "code": "#009473"
     },
     {
-      "id": "c5ea",
-      "title": "ocean-blue",
-      "code": "#1E90FF"
-    },
-    {
-      "id": "a474",
-      "title": "mimosa",
-      "code": "#F0C05A"
-    },
-    {
-      "id": "fbe9",
-      "title": "tangerine-tango",
-      "code": "#DD4124"
+      "id": "adae",
+      "title": "formData",
+      "code": "009473"
     }
   ]
 }

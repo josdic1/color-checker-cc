@@ -1,5 +1,6 @@
 /** --------------------- 🏗️ INITIAL SETUP --------------------- **/
 
+import { titleCleaner, codeCleaner } from "./helper.js"
 const init = () => {
 
   /** --------------------- DOM Elements--------------------- **/
@@ -32,21 +33,19 @@ const init = () => {
   }
 
   // color cube
-  function renderColorCube(colorCode) {
+  function renderColorCube() {
 
-    const cubeHtml =
-      `<h1 id="colorCube" style="color: ${colorCode}">COLOR</h1>`;
-    cube.innerHTML = cubeHtml
+
 
   }
 
   // color form
   function renderColorForm() {
     const formHtml =
-      `    <label for="title" > Color </label>
+      `<label for="title" > Color </label>
     <input id='title' name='title' placeholder='Color name here...' />
     <label for="code" > Code </label>
-    <input id='code' name='code' placeholder='Include #...' />
+    <input id='code' name='code' placeholder='Color code here...' />
       <button type='button' name='test' id='test'>Test</button>
          <button type='submit' name='submit' id='submit'>Submit</button>
             <button type='button' name='clear' id='clear'>Clear</button>
@@ -73,6 +72,11 @@ const init = () => {
 
     const clearBtn = document.getElementById("clear")
     clearBtn.addEventListener('click', clearForm)
+    function clearForm() {
+      document.getElementById('title').value = ''
+      document.getElementById('code').value = ''
+      inEditMode = false
+    }
   }
 
   // color list
@@ -127,12 +131,12 @@ const init = () => {
         selectedColor = colorObj
         switch (btnName) {
           case 'view':
-            return renderColorCube(colorObj.code)
+            return renderColorCube(colorObj)
           case 'edit':
             inEditMode = true
-            return populateForm(colorObj.title, colorObj.code)
+            return populateForm(colorObj)
           case 'del':
-            return deleteColor(colorObj.id)
+            return deleteColor(colorObj)
           default:
             break;
         }
@@ -141,36 +145,72 @@ const init = () => {
 
   }
 
-  function populateForm(title, code) {
-    document.getElementById('title').value = title
-    document.getElementById('code').value = code
+  function populateForm(color) {
+    document.getElementById('title').value = color.title
+    document.getElementById('code').value = color.code
+    selectedColor = color
   }
 
 
 
   /** --------------------- 🎯 HANDLER FUNCTIONS --------------------- **/
+
   function handleFormInput(e) {
+    let objToReformat = {}
     const { id, value } = e.target
-    formData = {
-      ...formData,
-      [id]: value
+    if (!inEditMode) {
+      formData = {
+        ...formData,
+        [id]: value
+      }
+      objToReformat = formData
+    } else {
+      if (inEditMode) {
+        selectedColor = {
+          ...selectedColor,
+          [id]: value
+        }
+        objToReformat = selectedColor
+      }
     }
+    reformatter(objToReformat)
+  }
+
+
+  function reformatter(obj) {
+    console.log('inedItMode: ', inEditMode + obj)
+    let cleanTitle = titleCleaner(obj.title)
+    let cleanCode = codeCleaner(obj.code)
+    if (!inEditMode) {
+      formData = {
+        ...obj,
+        title: cleanTitle,
+        code: cleanCode
+      }
+    } else {
+      selectedColor = {
+        ...obj,
+        title: cleanTitle,
+        code: cleanCode
+      }
+
+    }
+    console.log('formData: ', formData)
+    console.log('selectedColor: ', selectedColor)
   }
 
 
   function handleSubmitClick(e) {
     e.preventDefault()
-    if (!inEditMode) {
-      const newColor = formData
-      createColor(newColor)
+    let objToSubmit;
+
+    if (inEditMode) {
+      objToSubmit = selectedColor
+      updateColor(objToSubmit)
     } else {
-      const updatedColor = {
-        id: selectedColor.id,
-        ...formData
-      }
-      updateColor(updatedColor)
+      objToSubmit = formData
+      createColor(objToSubmit)
     }
-    clearForm()
   }
 
   /** --------------------- 🛠️ UTILITY FUNCTIONS --------------------- **/
@@ -199,50 +239,51 @@ const init = () => {
       const r = await fetch(`http://localhost:3000/colors`, {
         method: "POST",
         headers: {
-          'Content-Type': 'application.json'
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify(newColor)
+      });
+
+      if (!r.ok) {
+        throw new Error("fetch error in POST");
+      }
+      const data = await r.json();
+      console.log('created color: ', data)
+      const updatedList = [...colors, data]
+      await fetchColors();
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+
+  async function deleteColor(colorObj) {
+    const updatedList = colors.filter(color => color.id !== colorObj.id)
+    try {
+      const r = await fetch(`http://localhost:3000/colors/${colorObj.id}`, {
+        method: 'DELETE'
       })
       if (!r.ok) {
-        throw new Error('fetch error in POST')
+        throw new Error("fetch error in DELETE");
       }
-      const data = await r.json()
-      const updatedList = [...colors, data]
-      fetchColors(updatedList)
+      await fetchColors();
     } catch (error) { console.error(error) }
   }
 
-  async function deleteColor(delColor) {
-    try {
-      const r = await fetch(`http://localhost:3000/colors/${delColor}`, {
-        method: "DELETE",
-      })
-      if (!r.ok) {
-        throw new Error('fetch error in DELETE')
-      }
-      const data = await r.json()
-      const updatedList = colors.filter(color => color.id === data.id)
-      fetchColors(updatedList)
-    } catch (error) { console.error(error) }
-  }
 
   async function updateColor(editColor) {
     try {
       const r = await fetch(`http://localhost:3000/colors/${editColor.id}`, {
         method: "PATCH",
         headers: {
-          'Content-Type': 'application.json'
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify(editColor)
       })
       if (!r.ok) {
         throw new Error('fetch error in PATCH')
       }
-      const data = await r.json()
-      const updatedList = colors.map(color => color.id === data.id ?
-        data : color
-      )
-      fetchColors(updatedList)
+      await fetchColors()
     } catch (error) { console.error(error) }
   }
 
@@ -250,12 +291,7 @@ const init = () => {
 
 
   /** --------------------- 🗑️ CLEANUP FUNCTIONS --------------------- **/
-  //clear form
-  function clearForm() {
-    document.getElementById('title').value = ''
-    document.getElementById('code').value = ''
-    inEditMode = false
-  }
+
 
   /** --------------------- 🚀 INIT APP --------------------- **/
 
