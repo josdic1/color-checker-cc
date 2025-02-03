@@ -1,24 +1,14 @@
 {
-   "colors": [
-      {
-         "title": "fire-red",
-         "code": "#3c7e49",
-         "id": "f2b8"
-      },
-      {
-         "id": "81c1",
-         "title": "",
-         "code": ""
-      },
-      {
-         "id": "f751",
-         "title": "parkcity",
-         "code": "#111111"
-      },
-      {
-         "id": "9790",
-         "title": "dar-lehgion",
-         "code": "#3c7e49"
-      }
-   ]
+  "colors": [
+    {
+      "id": "f751",
+      "title": "parkcity",
+      "code": "#111111"
+    },
+    {
+      "id": "abf7",
+      "title": "dolgy",
+      "code": "#543543"
+    }
+  ]
 }

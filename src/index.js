@@ -128,11 +128,9 @@ const init = () => {
         } else {
           if (btnName === 'edit') {
             inEditMode = true
-            renderMessage(inEditMode ? `In Edit Mode...updating ${colorObj.id}` : '')
             populateForm(colorObj)
           } else {
             if (btnName === 'del') {
-              renderMessage(colorObj.id ? `ID to delete => ${colorObj.id}` : '')
               deleteColor(colorObj)
             }
           }
@@ -159,39 +157,47 @@ const init = () => {
       ...formData,
       [id]: value
     }
-    const formDataToProcess = formData
-    const mess = inEditMode && (formDataToProcess.title === selectedColor.title ? "Title unchanged" : "Title Updated")
-    renderMessage(mess)
   }
 
 
   function handleSubmitClick(e) {
     e.preventDefault()
 
-    const titleInput = document.getElementById('title')
-    console.log(titleInput)
+    let titleVal;
+    let codeVal;
+    let obj = {}
 
+    const titleInput = document.getElementById('title')
+    const codeInput = document.getElementById('code')
+
+    titleVal = titleInput.value
+    codeVal = codeInput.value
+    console.log(titleVal)
+    console.log(codeVal)
     const reformattedTitle = titleVal.replace(/[^a-zA-Z-]/g, '-').toLowerCase()
     titleVal = reformattedTitle
 
-    const reformattedCode = codeVal[0] === "#" ? codeVal.toLowerCase() : "#" + codeVal.toLowerCase()
-    codeVal = reformattedCode
+    const reformattedCode = codeVal[0] === "#" ? codeVal : "#" + codeVal
+    codeVal = reformattedCode.toLowerCase()
 
     if (inEditMode) {
-      const updatedColor = {
-        id: idVal,
-        title, titleVal,
+      selectedColor = {
+        id: selectedColor.id,
+        title: titleVal,
         code: codeVal
       }
-      console.log(updatedColor)
+      obj = selectedColor
+      updateColor(obj)
+
     } else {
-      const newColor = {
-        title, titleVal,
+      formData = {
+        title: titleVal,
         code: codeVal
       }
-      console.log(newColor)
+      obj = formData
+      createColor(obj)
     }
-    cleanUp()
+
   }
 
   /** --------------------- 🛠️ UTILITY FUNCTIONS --------------------- **/
@@ -218,12 +224,10 @@ const init = () => {
     } catch (error) { console.error('GET: ', error) }
   }
 
-  async function createColor(newColor) {
-    let mess;
+  async function createColor(color) {
 
+    const newColor = color
     try {
-      mess = "Starting creation of" + newColor.title
-      renderMessage(mess)
       const r = await fetch(`http://localhost:3000/colors`, {
         method: 'POST',
         headers: {
@@ -234,19 +238,34 @@ const init = () => {
       if (!r.ok) {
         throw new Error('Bad response attempting to create new color')
       }
+      const data = await r.json()
+      const updatedList = [...colors, data]
+      colors.push(data); // ✅ Only add if json-server confirms it
+      await fetchColors(); // ✅ Refresh from json-server to ensure sync
+
+
     } catch (error) { console.error('POST: ', error) }
   }
 
-
-  async function deleteColor(colorToDelete) {
+  async function deleteColor(color) {
     let mess;
+    const colorId = color.id
 
     try {
-      mess = "Starting deletion of " + colorToDelete.title
-      renderMessage(mess)
+      const r = await fetch(`http://localhost:3000/colors/${colorId}`, {
+        method: 'DELETE'
+      })
 
+      const data = await r.json()
+      const updatedList = colors.filter(color => color.id !== data.id)
+      mess = updatedList.length === colors.length ? "Nahh" : "Successfuly deleted"
+      colors = updatedList
+      renderColorList(updatedList)
+      renderMessage(mess)
     } catch (error) { console.error('DELETE: ', error) }
   }
+
+
 
   async function updateColor(updatedColor) {
     let mess;
