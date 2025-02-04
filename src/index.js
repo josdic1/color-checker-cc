@@ -28,14 +28,15 @@ const init = () => {
   }
 
   function renderList(data) {
+
     const colorList = data.map(c => (
       `<tr>
         <td>${c.id}</td>
         <td>${c.color}</td>
         <td>${c.code}</td>
-        <td><button type='button' id="view" name="${c.id}">View</button></td>
-        <td><button type='button' id="edit" name="${c.id}">Edit</button></td>
-        <td><button type='button' id="del" name="${c.id}">Del</button></td>
+        <td><button type='button' id="view-${c.id}" name="view">View</button></td>
+        <td><button type='button' id="edit-${c.id}" name="edit">Edit</button></td>
+        <td><button type='button' id="del-${c.id}" name="del">Del</button></td>
       </tr>`
     ))
 
@@ -56,16 +57,18 @@ const init = () => {
         </tbody>
       </table>`
 
+
     list.innerHTML = listHtml
 
-    document.getElementById('view').addEventListener("click", function (e) {
-      const { name } = e.target
-      console.log(name)
-      selectedColor = colors.find(color => color.id === name)
-      console.log(selectedColor)
-      renderCube(selectedColor.code)
-    })
-
+    list.addEventListener("click", function (e) {
+      const { id, name } = e.target;
+      console.log(id, name)
+      const colorId = id.split('-')[0].trim()
+      if (name === "view") {
+        selectedColor = colors.find(color => color.id === colorId);
+        console.log(selectedColor);
+      }
+    });
 
   }
 
