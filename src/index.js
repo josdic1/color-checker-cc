@@ -62,12 +62,17 @@ const init = () => {
 
     list.addEventListener("click", function (e) {
       const { id, name } = e.target;
-      console.log(id, name)
-      const colorId = id.split('-')[0].trim()
+      const colorId = id.split('-')[1].trim()
+      selectedColor = colors.find(c => c.id === colorId);
       if (name === "view") {
-        selectedColor = colors.find(color => color.id === colorId);
-        console.log(selectedColor);
+        const cubeColor = selectedColor.code ? "#" + selectedColor.code : ''
+        renderCube(cubeColor)
+      } else {
+        if (name === "del") {
+          deleteColor(colorId)
+        }
       }
+
     });
 
   }
@@ -93,6 +98,8 @@ const init = () => {
       const { id } = e.target
       if (id === "test") {
         cube = document.getElementById('codeInput').value
+
+        //can be reused
         let cubeString = cube.slice(0, 7).includes("#") ? cube.replace("#", "").slice(0, 6) : cube.slice(0, 6)
         cube = "#" + cubeString.toLowerCase()
         renderCube(cube)
@@ -126,6 +133,19 @@ const init = () => {
       renderCube(cube)
     } catch (error) { console.error(error) }
   }
+
+  async function deleteColor(colorId) {
+    try {
+      const r = await fetch(`http://localhost:3000/colors/${colorId}/`, {
+        method: 'DELETE'
+      })
+      if (!r.ok) {
+        throw new Error('DELETE: bad fetch')
+      }
+      await fetchColors()
+    } catch (error) { console.error(error) }
+  }
+
 
 
   function clearForm() {

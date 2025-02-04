@@ -9,6 +9,11 @@
       "color": "Peach Fuzz",
       "dbColor": "peach-fuzz",
       "code": "ffc196"
+    },
+    {
+      "color": "Sand Head",
+      "dbColor": "sand-head",
+      "code": "919293"
     }
   ]
 }
