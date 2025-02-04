@@ -3,17 +3,19 @@
     {
       "color": "Viva Magenta",
       "dbColor": "viva-magenta",
-      "code": "181750"
+      "code": "181750",
+      "id": "b6a6"
     },
     {
       "color": "Peach Fuzz",
       "dbColor": "peach-fuzz",
-      "code": "ffc196"
+      "code": "ffc196",
+      "id": "498a"
     },
     {
-      "color": "Sand Head",
-      "dbColor": "sand-head",
-      "code": "919293"
+      "id": "63de",
+      "color": "Pantone Brown",
+      "code": "345678"
     }
   ]
 }

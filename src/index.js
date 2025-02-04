@@ -18,12 +18,13 @@ const init = () => {
   const form = document.getElementById('form')
   const list = document.getElementById('list')
 
+
   fetchColors()
+
 
   function renderCube(colorCode) {
     const cubeHtml =
       `<h1 id="colorSphere" style="color: ${colorCode}; font-size: 200px;">⬤</h1>`
-
     cube.innerHTML = cubeHtml
   }
 
@@ -62,17 +63,18 @@ const init = () => {
 
     list.addEventListener("click", function (e) {
       const { id, name } = e.target;
-      const colorId = id.split('-')[1].trim()
+      const colorId = String(id.split('-')[1].trim())
       selectedColor = colors.find(c => c.id === colorId);
-      if (name === "view") {
-        const cubeColor = selectedColor.code ? "#" + selectedColor.code : ''
-        renderCube(cubeColor)
-      } else {
-        if (name === "del") {
-          deleteColor(colorId)
-        }
+      if (name === 'edit') {
+        inEditMode = true
+        const updatedColor = selectedColor
+        document.getElementById('colorInput').value = updatedColor.color
+        document.getElementById('codeInput').value = updatedColor.code
       }
-
+      if (name === 'del') {
+        const deletedColor = selectedColor
+        deleteColor(deletedColor)
+      }
     });
 
   }
@@ -80,43 +82,72 @@ const init = () => {
   function renderForm() {
     const formHtml =
       `<label formHtml="colorInput">Color </label>
-    <input type='text' id='colorInput' name='colorInput' placeholder="Color name..." />
+    <input type='text' id='colorInput' name='color' class="form-input" placeholder="Color name..." />
     <label formHtml="codeInput">Code </label>
-        <input type='text' id='codeInput' name='codeInput' placeholder="Color code..." />
+        <input type='text' id='codeInput' name='code' class="form-input" placeholder="Color code..." />
         <div id="btn-menu">
         <button type='button' id='test' name='test'>TEST</button>
-        <button type='submit' id='submit' name='test'>SUBMIT</button>
+        <button type='submit' id='submit' name='submit'>SUBMIT</button>
         <button type='button' id='clear' name='clear'>CLEAR</button>      
         </div>
         `
 
     form.innerHTML = formHtml
+    let colorValue;
+    let codeValue;
 
-    document.getElementById('test').addEventListener('click', function (e) {
-      let cube;
-
-      const { id } = e.target
-      if (id === "test") {
-        cube = document.getElementById('codeInput').value
-
-        //can be reused
-        let cubeString = cube.slice(0, 7).includes("#") ? cube.replace("#", "").slice(0, 6) : cube.slice(0, 6)
-        cube = "#" + cubeString.toLowerCase()
-        renderCube(cube)
-      }
-    })
-
-    document.getElementById('submit').addEventListener('submit', function (e) {
+    form.addEventListener('submit', function (e) {
       e.preventDefault()
-    })
-
-    document.getElementById('clear').addEventListener('click', function (e) {
-      const { id } = e.target
-      if (id === 'clear') {
-        clearForm()
+      if (inEditMode) {
+        colorValue = document.getElementById('colorInput').value
+        codeValue = document.getElementById('codeInput').value
+        const colorToUpdate = {
+          id: selectedColor.id,
+          color: colorValue,
+          code: codeValue
+        }
+        selectedColor = colorToUpdate
+        updateColor(colorToUpdate)
+      } else {
+        colorValue = document.getElementById('colorInput').value
+        codeValue = document.getElementById('codeInput').value
+        const colorToCreate = {
+          color: colorValue,
+          code: codeValue
+        }
+        formData = colorToCreate
+        createColor(colorToCreate)
       }
     })
 
+    // const colorInputValue = document.getElementById('colorInput').addEventListener('input', function (e) {
+    //   populateForm(e.target.name, e.target.value)
+    // })
+
+    // const codeInputValue = document.getElementById('codeInput').addEventListener('input', function (e) {
+    //   populateForm(e.target.name, e.target.value)
+    // })
+
+
+    document.getElementById('test').addEventListener('click', handleTestClick)
+    document.getElementById('clear').addEventListener('click', handleClearClick)
+
+  }
+
+  /* Handler Fucntions*/
+  function handleTestClick() {
+    let cube;
+
+    cube = document.getElementById('codeInput').value
+    //can be reused
+    let cubeString = cube.slice(0, 7).includes("#") ? cube.replace("#", "").slice(0, 6) : cube.slice(0, 6)
+    cube = "#" + cubeString.toLowerCase()
+    renderCube(cube)
+  }
+
+
+  function handleClearClick() {
+    clearForm()
   }
 
   async function fetchColors() {
@@ -134,15 +165,52 @@ const init = () => {
     } catch (error) { console.error(error) }
   }
 
-  async function deleteColor(colorId) {
+
+
+  async function createColor(newColor) {
     try {
-      const r = await fetch(`http://localhost:3000/colors/${colorId}/`, {
+      const r = await fetch(`http://localhost:3000/colors/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(newColor)
+      });
+
+      if (!r.ok) {
+        throw new Error('POST: bad fetch');
+      }
+
+      const createdColor = await r.json();
+      console.log("Created color:", createdColor);
+
+      return createdColor; // Return the created color instead of calling fetchColors()
+    } catch (error) {
+      console.error("Error creating color:", error);
+      return null;
+    }
+  }
+
+
+  async function deleteColor(color) {
+    if (!color || !color.id) {
+      console.error("Invalid color object:", color);
+      return;
+    }
+    try {
+      const r = await fetch(`http://localhost:3000/colors/${color.id}/`, {
         method: 'DELETE'
       })
       if (!r.ok) {
-        throw new Error('DELETE: bad fetch')
+        throw new Error('Bad response: DELETE')
       }
       await fetchColors()
+    } catch (error) { console.error(error) }
+  }
+
+  async function updateColor(updatedColor) {
+    try {
+      console.log('updated color...', updatedColor.color)
     } catch (error) { console.error(error) }
   }
 
