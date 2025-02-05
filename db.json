@@ -4,28 +4,235 @@
       "color": "Viva Magenta",
       "dbColor": "viva-magenta",
       "code": "181750",
-      "id": "b6a6"
+      "id": "eb05"
     },
     {
       "color": "Peach Fuzz",
       "dbColor": "peach-fuzz",
       "code": "ffc196",
-      "id": "498a"
+      "id": "7ac4"
     },
     {
-      "id": "63de",
-      "color": "Pantone Brown",
-      "code": "345678"
+      "color": "Moderate Blue",
+      "dbColor": "moderate-blue",
+      "code": "345678",
+      "id": "3c9b"
     },
     {
-      "id": "60be",
-      "color": "Ruby",
-      "code": "345345"
+      "color": "Living Coral",
+      "dbColor": "living-coral",
+      "code": "ff6f61",
+      "id": "6ceb"
     },
     {
-      "id": "8cf0",
-      "color": "Derbus",
-      "code": "434567"
+      "color": "Electric Blue Lemonade",
+      "dbColor": "electric-blue-lemonade",
+      "code": "00a4cc",
+      "id": "3d27"
+    },
+    {
+      "color": "Phantom Green",
+      "dbColor": "phantom-green",
+      "code": "007e40",
+      "id": "6720"
+    },
+    {
+      "color": "Mystic Violet",
+      "dbColor": "mystic-violet",
+      "code": "673c7e",
+      "id": "e667"
+    },
+    {
+      "color": "Amber Glow",
+      "dbColor": "amber-glow",
+      "code": "ff9700",
+      "id": "28fb"
+    },
+    {
+      "color": "Azure Radiance",
+      "dbColor": "azure-radiance",
+      "code": "007fff",
+      "id": "8713"
+    },
+    {
+      "color": "Ethereal Lilac",
+      "dbColor": "ethereal-lilac",
+      "code": "c9a0dc",
+      "id": "2293"
+    },
+    {
+      "color": "Cyber Grape",
+      "dbColor": "cyber-grape",
+      "code": "58427c",
+      "id": "3d5f"
+    },
+    {
+      "color": "Royal Velvet",
+      "dbColor": "royal-velvet",
+      "code": "491e64",
+      "id": "119c"
+    },
+    {
+      "color": "Celestial Teal",
+      "dbColor": "celestial-teal",
+      "code": "007a8e",
+      "id": "ca6e"
+    },
+    {
+      "color": "Burnt Sienna",
+      "dbColor": "burnt-sienna",
+      "code": "e97451",
+      "id": "5d42"
+    },
+    {
+      "color": "Solar Flare",
+      "dbColor": "solar-flare",
+      "code": "ff4500",
+      "id": "7c03"
+    },
+    {
+      "color": "Sapphire Mirage",
+      "dbColor": "sapphire-mirage",
+      "code": "0f52ba",
+      "id": "7d24"
+    },
+    {
+      "color": "Luminous Lime",
+      "dbColor": "luminous-lime",
+      "code": "c7ea46",
+      "id": "8730"
+    },
+    {
+      "color": "Frosted Plum",
+      "dbColor": "frosted-plum",
+      "code": "86608e",
+      "id": "e429"
+    },
+    {
+      "color": "Shimmering Rose",
+      "dbColor": "shimmering-rose",
+      "code": "e0115f",
+      "id": "0ee3"
+    },
+    {
+      "color": "Verdant Moss",
+      "dbColor": "verdant-moss",
+      "code": "6b8e23",
+      "id": "21ac"
+    },
+    {
+      "color": "Midnight Mirage",
+      "dbColor": "midnight-mirage",
+      "code": "191970",
+      "id": "f120"
+    },
+    {
+      "color": "Sunset Gold",
+      "dbColor": "sunset-gold",
+      "code": "ffcc33",
+      "id": "690c"
+    },
+    {
+      "color": "Ocean Depths",
+      "dbColor": "ocean-depths",
+      "code": "006994",
+      "id": "5e4d"
+    },
+    {
+      "color": "Aurora Borealis",
+      "dbColor": "aurora-borealis",
+      "code": "48d1cc",
+      "id": "dd88"
+    },
+    {
+      "color": "Nebula Pink",
+      "dbColor": "nebula-pink",
+      "code": "ff69b4",
+      "id": "47ac"
+    },
+    {
+      "color": "Deep Space Blue",
+      "dbColor": "deep-space-blue",
+      "code": "1b3f8b",
+      "id": "107d"
+    },
+    {
+      "color": "Twilight Indigo",
+      "dbColor": "twilight-indigo",
+      "code": "3f3d56",
+      "id": "6e48"
+    },
+    {
+      "color": "Desert Rose",
+      "dbColor": "desert-rose",
+      "code": "c17c74",
+      "id": "9c7a"
+    },
+    {
+      "color": "Frozen Sky",
+      "dbColor": "frozen-sky",
+      "code": "a4dbe8",
+      "id": "202a"
+    },
+    {
+      "color": "Dewdrop Mint",
+      "dbColor": "dewdrop-mint",
+      "code": "98ff98",
+      "id": "2819"
+    },
+    {
+      "color": "Dusky Orchid",
+      "dbColor": "dusky-orchid",
+      "code": "9873ac",
+      "id": "8cb2"
+    },
+    {
+      "color": "Dragonfruit Punch",
+      "dbColor": "dragonfruit-punch",
+      "code": "d90052",
+      "id": "6959"
+    },
+    {
+      "color": "Inferno Red",
+      "dbColor": "inferno-red",
+      "code": "b22222",
+      "id": "5a85"
+    },
+    {
+      "color": "Icicle Blue",
+      "dbColor": "icicle-blue",
+      "code": "5dade2",
+      "id": "8ed4"
+    },
+    {
+      "color": "Lava Orange",
+      "dbColor": "lava-orange",
+      "code": "e25822",
+      "id": "4d38"
+    },
+    {
+      "color": "Neon Peony",
+      "dbColor": "neon-peony",
+      "code": "ff1493",
+      "id": "dc56"
+    },
+    {
+      "color": "Glacier Silver",
+      "dbColor": "glacier-silver",
+      "code": "c0c0c0",
+      "id": "b104"
+    },
+    {
+      "color": "Opal Mist",
+      "dbColor": "opal-mist",
+      "code": "a3c1ad",
+      "id": "147a"
+    },
+    {
+      "color": "Electric Orchid",
+      "dbColor": "electric-orchid",
+      "code": "da70d6",
+      "id": "149a"
     }
   ]
 }

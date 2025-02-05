@@ -11,6 +11,7 @@ const init = () => {
     color: '',
     code: ''
   }
+  let hex = "#3bb9b3"
 
 
   const message = document.getElementById('message')
@@ -19,6 +20,15 @@ const init = () => {
   const form = document.getElementById('form')
 
   fetchColors()
+
+
+  function renderCube(code) {
+
+    const cubeHtml =
+      `<h1 id='sphere' class="fill-text" style="color: ${code}"> ■ ▣ ▧ </h1>`
+
+    cube.innerHTML = cubeHtml
+  }
 
   function renderList(data) {
 
@@ -63,6 +73,22 @@ const init = () => {
       </table>`
 
     list.innerHTML = listHtml
+
+  }
+
+  list.addEventListener('click', handleItemButtonClick)
+  function handleItemButtonClick(e) {
+    const { id, name } = e.target
+    const colorObj = colors.find(color => color.id === id)
+    selectedColor = colorObj
+    if (name === "del") {
+      deleteColor(id)
+    } else {
+      if (name === "view") {
+        hex = "#" + colorObj.code
+        renderCube(hex)
+      }
+    }
   }
 
   function renderForm() {
@@ -113,6 +139,7 @@ const init = () => {
       colors = data
       renderList(data)
       renderForm()
+      renderCube(hex)
     } catch (error) { console.error(error) }
   }
 
@@ -126,7 +153,19 @@ const init = () => {
         body: JSON.stringify(newColor)
       })
       if (!r.ok) {
-        throw new error('bad fetch in POST')
+        throw new Error('bad fetch in POST')
+      }
+      await fetchColors()
+    } catch (error) { console.error(error) }
+  }
+
+  async function deleteColor(id) {
+    try {
+      const r = await fetch(`http://localhost:3000/colors/${id}`, {
+        method: 'DELETE',
+      })
+      if (!r.ok) {
+        throw new Error('bad fetch in DELETE')
       }
       await fetchColors()
     } catch (error) { console.error(error) }
