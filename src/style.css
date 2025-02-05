@@ -33,16 +33,13 @@ body {
 }
 
 #cube {
+  position: sticky;  
+  top: 20px;        
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.5em;
-  font-weight: bold;
-  border: none;
-  border-radius: 8px;
-  margin-bottom: 1rem;
-  transition: background-color 0.3s ease-in-out;
 }
+
 
 
 h1 {
