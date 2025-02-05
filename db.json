@@ -33,14 +33,6 @@
       "dbFamily": "tertiary"
     },
     {
-      "color": "Electric Blue Lemonade",
-      "dbColor": "electric-blue-lemonade",
-      "code": "00a4cc",
-      "id": "3d27",
-      "family": "Neon",
-      "dbFamily": "neon"
-    },
-    {
       "color": "Phantom Green",
       "dbColor": "phantom-green",
       "code": "007e40",
@@ -215,14 +207,6 @@
       "id": "6e48",
       "family": "Deep Tone",
       "dbFamily": "deep-tone"
-    },
-    {
-      "color": "Ugly Beige",
-      "dbColor": "ugly-beige",
-      "code": "a7a3a6",
-      "id": "6448",
-      "family": "Earth Tone",
-      "dbFamily": "earth-tone"
     }
   ]
 }
