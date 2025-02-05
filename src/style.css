@@ -40,6 +40,119 @@ body {
   justify-content: center;
 }
 
+.form-container, .cube-container {
+  width: 260px; /* More compact width */
+  padding: 12px;
+  background: rgb(245, 245, 245);
+  border-radius: 6px;
+  margin: 10px auto; /* Reduced margin */
+  text-align: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15); /* Soft shadow for depth */
+}
+
+#form {
+  display: flex;
+  flex-direction: column;
+  gap: 6px; /* Adds spacing between elements */
+}
+
+.form-title, .filter-title {
+  font-size: 1.1em;
+  color: #ff6f61;
+  margin-bottom: 5px; /* Small spacing */
+}
+
+.form-label {
+  font-size: 0.9em;
+  color: #0b0b34;
+}
+
+.form-input {
+  width: 100%;
+  padding: 6px;
+  font-size: 0.9em;
+  border: 1px solid #ccc;
+  background: white;
+  color: black;
+  border-radius: 4px;
+}
+
+.form-input:focus {
+  outline: 2px solid #646cff;
+  border-color: #646cff;
+}
+
+.form-button {
+  background: #646cff;
+  color: white;
+  padding: 8px;
+  font-size: 0.9em;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.form-button:hover {
+  background: #535bf2;
+}
+
+.filter-container {
+  width: flex; 
+  max-width: 600px; 
+  padding: 10px;
+  background: rgb(245, 245, 245);
+  border-radius: 6px;
+  margin: 10px auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+#filter {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  width: 100%;
+  align-items: center;
+}
+
+.filter-input {
+  flex: 1; 
+  padding: 6px;
+  font-size: 0.9em;
+  border: 1px solid #ccc;
+  background: white;
+  color: black;
+  border-radius: 4px;
+}
+
+.filter-input:focus {
+  outline: 2px solid #646cff;
+  border-color: #646cff;
+}
+
+.filter-button {
+  background: #646cff;
+  color: white;
+  padding: 8px 12px;
+  font-size: 0.9em;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.filter-button:hover {
+  background: #535bf2;
+}
+
+
+button:hover {
+  background: darkblue;
+}
+
 
 
 h1 {

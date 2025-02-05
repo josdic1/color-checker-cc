@@ -20,10 +20,12 @@ const init = () => {
 
 
   const message = document.getElementById('message')
+  const form = document.getElementById('form')
   const cube = document.getElementById('cube')
   const filter = document.getElementById('filter')
+  const sort = document.getElementById('sort')
   const list = document.getElementById('list')
-  const form = document.getElementById('form')
+
 
   fetchColors()
 
@@ -38,11 +40,11 @@ const init = () => {
 
   function renderFilter() {
     const filterHtml =
-      ` <h4>Color Filter </h4>
-      <label for="colorInputFilter">Color:</label>
+      ` <h4 class='filter-title'>Color Filter </h4>
+      <label class='filter-label' for="colorInputFilter">Color:</label>
       <input type="text" id="colorInputFilter" class="filter-input" name="color" placeholder="Type something..." />
-      <label for="familyInputFilter">Type:</label>
-    <select id="familyInputFilter" name="family" >
+      <label class='filter-label' for="familyInputFilter">Type:</label>
+    <select id="familyInputFilter" name="family" class='filter-input'>
     <option value="all" selected disabled>Choose one...</option>
   <option value='deep-tone'>Deep Tone</option>
 <option value='earth-tone'>Earth Tone</option>
@@ -99,12 +101,12 @@ const init = () => {
 
     const formHtml =
       `
-      <h4>Color Form </h4>
-      <label for="colorInput">Color:</label>
+      <h4 class='form-title'>Color Form </h4>
+      <label class='form-label' for="colorInput">Color:</label>
       <input type="text" id="colorInput" class="form-input" name="color" placeholder="Color name..." />
-         <label for="codeInput">HEX:</label>
+         <label class='form-label' for="codeInput">HEX:</label>
       <input type="text" id="codeInput" class="form-input" name="code" placeholder="#000000..." />
-       <label for="familyInput">Family:</label>
+       <label class='form-label' for="familyInput">Family:</label>
          <select id="familyInput" name="family" >
     <option value="all" selected disabled>Select...</option>
   <option value='deep-tone'>Deep Tone</option>
@@ -115,7 +117,9 @@ const init = () => {
 <option value='secondary'>Secondary</option>
 <option value='tertiary'>Tertiary</option>
     </select>
-      <button type="submit" name="submit" class="form-btn">✓ Submit</button>
+    <div class='form-btn-menu'>
+      <button type="submit" name="submit" class="form-btn">✓ Submit</button> <button type="click" name="cancel" class="form-btn">Cancel</button>
+      </div>
       `
     form.innerHTML = formHtml
 
@@ -156,6 +160,57 @@ const init = () => {
     }
   }
 
+  function renderSort() {
+    const sortHtml =
+      `
+      <div id='btn-menu' class="sort-container">
+      Sort colors:
+        <button type='button' class='sort-btn' id='ascAlpha' name='color'>Color (A-Z)</button>
+        <button type='button' class='sort-btn' id="descAlpha" name='color'>Color (Z-A)</button>
+           <button type='button' class='sort-btn' id='ascFamily' name='family'>Family (A-Z)</button>
+        <button type='button' class='sort-btn' id="descFamily" name='family'>Family (Z-A)</button>
+                <button type='button' class='sort-btn' id="clearSort" name='clear'>Reset</button>
+      </div>`
+
+    sort.innerHTML = sortHtml
+
+    document.getElementById('ascAlpha').addEventListener('click', sortColors)
+    document.getElementById('descAlpha').addEventListener('click', sortColors)
+    document.getElementById('ascFamily').addEventListener('click', sortColors)
+    document.getElementById('descFamily').addEventListener('click', sortColors)
+    document.getElementById('clearSort').addEventListener('click', resetSort)
+  }
+
+  let sortedList = []
+  function sortColors(e) {
+    const { id, name } = e.target
+    if (name === 'color') {
+      if (id === 'ascAlpha') {
+        sortedList = [...colors].sort((a, b) => a.color.localeCompare(b.color))
+      } else {
+        if (id === 'descAlpha') {
+          sortedList = [...colors].sort((a, b) => b.color.localeCompare(a.color))
+        }
+      }
+      renderList(sortedList)
+    } else {
+      if (name === 'family') {
+        if (id === 'ascFamily') {
+          sortedList = [...colors].sort((a, b) => a.family.localeCompare(b.family))
+        } else {
+          if (id === 'descFamily') {
+            sortedList = [...colors].sort((a, b) => b.family.localeCompare(a.family))
+          }
+        }
+        renderList(sortedList)
+      }
+    }
+  }
+
+
+  function resetSort() {
+    renderList(colors)
+  }
 
   function renderList(data) {
 
@@ -245,6 +300,7 @@ const init = () => {
       renderForm()
       renderCube(hex)
       renderFilter()
+      renderSort()
     } catch (error) { console.error(error) }
   }
 
