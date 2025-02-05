@@ -6,6 +6,10 @@ const init = () => {
     color: '',
     code: ''
   }
+  let filterData = {
+    color: '',
+    code: ''
+  }
   let selectedColor = {
     id: '',
     color: '',
@@ -16,6 +20,7 @@ const init = () => {
 
   const message = document.getElementById('message')
   const cube = document.getElementById('cube')
+  const filter = document.getElementById('filter')
   const list = document.getElementById('list')
   const form = document.getElementById('form')
 
@@ -28,6 +33,89 @@ const init = () => {
       `<h1 id='sphere' class="fill-text" style="color: ${code}"> ■ ▣ ▧ </h1>`
 
     cube.innerHTML = cubeHtml
+  }
+
+  function renderFilter() {
+    const filterHtml =
+      ` <h4>Filter </h4>
+      <label for="colorInputFilter"> Color name </label>
+      <input type="text" id="colorInputFilter" class="filter-input" name="color" placeholder="Type something..." />
+    <select id="familyInputFilter" name="family" >
+    <option value="all" selected disabled>Choose one...</option>
+    </select>
+    <button type="button" id="clearFilterBtn" class="filter-btn" name='clear'>⌫</button>
+    `
+
+    filter.innerHTML = filterHtml
+
+    // Event Listeners
+    document.getElementById('colorInputFilter').addEventListener('input', handleFilterInput)
+
+    document.getElementById('familyInputFilter').addEventListener('change', handleFilterInput)
+
+    document.getElementById('clearFilterBtn').addEventListener('click', handleClearFilterClick)
+
+  }
+
+  function handleFilterInput(e) {
+    const { name, value } = e.target
+    filterData = {
+      ...filterData,
+      [name]: value
+    }
+    const filterValues = filterData
+    filterList(filterValues)
+  }
+
+  function filterList(filterValues) {
+
+  }
+
+  function handleClearFilterClick() {
+    document.getElementById('colorInputFilter').value = ''
+    document.getElementById('codeInputFilter').value = ''
+    message.textContent = 'Filter Cleared'
+  }
+
+  function renderForm() {
+
+    const formHtml =
+      `
+      <h4>Color Form </h4>
+      <label for="colorInput"> Color: </label>
+      <input type="text" id="colorInput" class="form-input" name="color" placeholder="Color name..." />
+         <label for="codeInput"> HEX: </label>
+      <input type="text" id="codeInput" class="form-input" name="code" placeholder="#000000..." />
+      <button type="submit" name="submit" class="form-btn">✓</button>
+      `
+    form.innerHTML = formHtml
+
+    // Event Listeners
+    document.getElementById('colorInput').addEventListener('input', handleFormInput)
+
+    document.getElementById('codeInput').addEventListener('input', handleFormInput)
+
+    form.addEventListener('submit', handleSubmitClick)
+
+  }
+
+  function handleFormInput(e) {
+    const { name, value } = e.target
+    formData = {
+      ...formData,
+      [name]: value
+    }
+  }
+
+  function handleSubmitClick(e) {
+    e.preventDefault()
+    if (inEditMode) {
+      inEditMode = true
+      return;
+    } else {
+      const newColor = formData
+      createColor(newColor)
+    }
   }
 
   function renderList(data) {
@@ -91,42 +179,7 @@ const init = () => {
     }
   }
 
-  function renderForm() {
 
-    const formHtml =
-      `<input type="text" id="colorInput" class="form-input" name="color" placeholder="Color name..." />
-      <input type="text" id="codeInput" class="form-input" name="code" placeholder="HEX code..." />
-      <button type="submit" name="submit" class="form-btn">Go!</button>
-      `
-    form.innerHTML = formHtml
-
-    // Event Listeners
-    document.getElementById('colorInput').addEventListener('input', handleFormInput)
-
-    document.getElementById('codeInput').addEventListener('input', handleFormInput)
-
-    form.addEventListener('submit', handleSubmitClick)
-
-  }
-
-  function handleFormInput(e) {
-    const { name, value } = e.target
-    formData = {
-      ...formData,
-      [name]: value
-    }
-  }
-
-  function handleSubmitClick(e) {
-    e.preventDefault()
-    if (inEditMode) {
-      inEditMode = true
-      return;
-    } else {
-      const newColor = formData
-      createColor(newColor)
-    }
-  }
 
 
   async function fetchColors() {
@@ -140,6 +193,7 @@ const init = () => {
       renderList(data)
       renderForm()
       renderCube(hex)
+      renderFilter()
     } catch (error) { console.error(error) }
   }
 
