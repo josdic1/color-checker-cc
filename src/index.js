@@ -8,7 +8,7 @@ const init = () => {
   }
   let filterData = {
     color: '',
-    code: ''
+    family: 'all'
   }
   let selectedColor = {
     id: '',
@@ -37,14 +37,26 @@ const init = () => {
 
   function renderFilter() {
     const filterHtml =
-      ` <h4>Filter </h4>
-      <label for="colorInputFilter"> Color name </label>
+      ` <h4>Color Filter </h4>
+      <label for="colorInputFilter">Color:</label>
       <input type="text" id="colorInputFilter" class="filter-input" name="color" placeholder="Type something..." />
+      <label for="familyInputFilter">Type:</label>
     <select id="familyInputFilter" name="family" >
     <option value="all" selected disabled>Choose one...</option>
+  <option value='deep-tone'>Deep Tone</option>
+<option value='earth-tone'>Earth Tone</option>
+<option value='neon'>Neon</option>
+<option value='pastel'>Pastel</option>
+<option value='primary'>Primary</option>
+<option value='secondary'>Secondary</option>
+<option value='tertiary'>Tertiary</option>
     </select>
-    <button type="button" id="clearFilterBtn" class="filter-btn" name='clear'>⌫</button>
+    <button type="button" id="clearFilterBtn" class="filter-btn" name='clear'>Clear Filter</button>
     `
+
+
+
+
 
     filter.innerHTML = filterHtml
 
@@ -63,18 +75,23 @@ const init = () => {
       ...filterData,
       [name]: value
     }
+    console.log(filterData)
     const filterValues = filterData
     filterList(filterValues)
   }
 
   function filterList(filterValues) {
-
+    const filteredList = colors.filter(color => (
+      (!filterValues.color || color.color.toLowerCase().includes(filterValues.color.toLowerCase())) &&
+      (filterValues.family === 'all' || color.dbFamily === filterValues.family)
+    ))
+    renderList(filteredList)
   }
 
   function handleClearFilterClick() {
     document.getElementById('colorInputFilter').value = ''
-    document.getElementById('codeInputFilter').value = ''
     message.textContent = 'Filter Cleared'
+    renderList(colors)
   }
 
   function renderForm() {
@@ -82,11 +99,22 @@ const init = () => {
     const formHtml =
       `
       <h4>Color Form </h4>
-      <label for="colorInput"> Color: </label>
+      <label for="colorInput">Color:</label>
       <input type="text" id="colorInput" class="form-input" name="color" placeholder="Color name..." />
-         <label for="codeInput"> HEX: </label>
+         <label for="codeInput">HEX:</label>
       <input type="text" id="codeInput" class="form-input" name="code" placeholder="#000000..." />
-      <button type="submit" name="submit" class="form-btn">✓</button>
+       <label for="familyInput">Type:</label>
+         <select id="familyInput" name="family" >
+    <option value="all" selected disabled>Choose one...</option>
+  <option value='deep-tone'>Deep Tone</option>
+<option value='earth-tone'>Earth Tone</option>
+<option value='neon'>Neon</option>
+<option value='pastel'>Pastel</option>
+<option value='primary'>Primary</option>
+<option value='secondary'>Secondary</option>
+<option value='tertiary'>Tertiary</option>
+    </select>
+      <button type="submit" name="submit" class="form-btn">✓ Submit</button>
       `
     form.innerHTML = formHtml
 
@@ -117,6 +145,7 @@ const init = () => {
       createColor(newColor)
     }
   }
+
 
   function renderList(data) {
 
@@ -180,8 +209,6 @@ const init = () => {
   }
 
 
-
-
   async function fetchColors() {
     try {
       const r = await fetch(`http://localhost:3000/colors`)
@@ -190,6 +217,7 @@ const init = () => {
       }
       const data = await r.json()
       colors = data
+      message.textContent = 'Colors Fetched'
       renderList(data)
       renderForm()
       renderCube(hex)
@@ -210,6 +238,7 @@ const init = () => {
         throw new Error('bad fetch in POST')
       }
       await fetchColors()
+      message.textContent = 'New Color Created'
     } catch (error) { console.error(error) }
   }
 
@@ -222,6 +251,7 @@ const init = () => {
         throw new Error('bad fetch in DELETE')
       }
       await fetchColors()
+      message.textContent = 'Color Deleted'
     } catch (error) { console.error(error) }
   }
 
