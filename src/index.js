@@ -20,18 +20,6 @@ const init = () => {
 
   fetchColors()
 
-  function renderCube(colorObj) {
-
-    const colorObjItems = {
-      ...colorObj,
-      color: colorObj.color,
-      code: colorObj.code
-    }
-    console.log(colorObjItems)
-    const cubeHtml =
-      `<h1 id="${code}" class="sphere"></h1>`
-  }
-
   function renderList(data) {
 
     const colorList = data.map(item => (
@@ -77,6 +65,44 @@ const init = () => {
     list.innerHTML = listHtml
   }
 
+  function renderForm() {
+
+    const formHtml =
+      `<input type="text" id="colorInput" class="form-input" name="color" placeholder="Color name..." />
+      <input type="text" id="codeInput" class="form-input" name="code" placeholder="HEX code..." />
+      <button type="submit" name="submit" class="form-btn">Go!</button>
+      `
+    form.innerHTML = formHtml
+
+    // Event Listeners
+    document.getElementById('colorInput').addEventListener('input', handleFormInput)
+
+    document.getElementById('codeInput').addEventListener('input', handleFormInput)
+
+    form.addEventListener('submit', handleSubmitClick)
+
+  }
+
+  function handleFormInput(e) {
+    const { name, value } = e.target
+    formData = {
+      ...formData,
+      [name]: value
+    }
+  }
+
+  function handleSubmitClick(e) {
+    e.preventDefault()
+    if (inEditMode) {
+      inEditMode = true
+      return;
+    } else {
+      const newColor = formData
+      createColor(newColor)
+    }
+  }
+
+
   async function fetchColors() {
     try {
       const r = await fetch(`http://localhost:3000/colors`)
@@ -86,6 +112,23 @@ const init = () => {
       const data = await r.json()
       colors = data
       renderList(data)
+      renderForm()
+    } catch (error) { console.error(error) }
+  }
+
+  async function createColor(newColor) {
+    try {
+      const r = await fetch(`http://localhost:3000/colors`, {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(newColor)
+      })
+      if (!r.ok) {
+        throw new error('bad fetch in POST')
+      }
+      await fetchColors()
     } catch (error) { console.error(error) }
   }
 
