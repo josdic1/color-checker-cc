@@ -13,7 +13,8 @@ const init = () => {
   let selectedColor = {
     id: '',
     color: '',
-    code: ''
+    code: '',
+    family: ''
   }
   let hex = "#3bb9b3"
 
@@ -103,9 +104,9 @@ const init = () => {
       <input type="text" id="colorInput" class="form-input" name="color" placeholder="Color name..." />
          <label for="codeInput">HEX:</label>
       <input type="text" id="codeInput" class="form-input" name="code" placeholder="#000000..." />
-       <label for="familyInput">Type:</label>
+       <label for="familyInput">Family:</label>
          <select id="familyInput" name="family" >
-    <option value="all" selected disabled>Choose one...</option>
+    <option value="all" selected disabled>Select...</option>
   <option value='deep-tone'>Deep Tone</option>
 <option value='earth-tone'>Earth Tone</option>
 <option value='neon'>Neon</option>
@@ -123,6 +124,8 @@ const init = () => {
 
     document.getElementById('codeInput').addEventListener('input', handleFormInput)
 
+    document.getElementById('familyInput').addEventListener('input', handleFormInput)
+
     form.addEventListener('submit', handleSubmitClick)
 
   }
@@ -137,9 +140,16 @@ const init = () => {
 
   function handleSubmitClick(e) {
     e.preventDefault()
+    const { name, value } = e.target
     if (inEditMode) {
-      inEditMode = true
-      return;
+      selectedColor = {
+        ...selectedColor,
+        color: document.getElementById('colorInput').value,
+        code: document.getElementById('codeInput').value,
+        family: document.getElementById('familyInput').value
+      }
+      const updatedColor = selectedColor
+      updateColor(updatedColor)
     } else {
       const newColor = formData
       createColor(newColor)
@@ -154,6 +164,7 @@ const init = () => {
         <td>${item.id}</td>
         <td>${item.color}</td>
         <td>${item.code}</td>
+        <td>${item.family}</td>
         <td>
           <button type="button" id="${item.id}" class="item-btn" name="view">
             View
@@ -179,6 +190,7 @@ const init = () => {
             <th>ID</th>
             <th>Color</th>
             <th>HEX</th>
+            <th>family</th>
             <th>V</th>
             <th>E</th>
             <th>D</th>
@@ -204,6 +216,17 @@ const init = () => {
       if (name === "view") {
         hex = "#" + colorObj.code
         renderCube(hex)
+      } else {
+        if (name === 'edit') {
+          inEditMode = true
+          selectedColor = colorObj
+          message.textContent = 'Edit Mode, selectedColor Set'
+
+          //populate form with existing color
+          document.getElementById('colorInput').value = colorObj.color
+          document.getElementById('codeInput').value = colorObj.code
+          document.getElementById('familyInput').value = colorObj.dbFamily
+        }
       }
     }
   }
@@ -252,6 +275,23 @@ const init = () => {
       }
       await fetchColors()
       message.textContent = 'Color Deleted'
+    } catch (error) { console.error(error) }
+  }
+
+  async function updateColor(updatedColor) {
+    try {
+      const r = await fetch(`http://localhost:3000/colors/${updatedColor.id}`, {
+        method: 'PATCH',
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(updatedColor)
+      })
+      if (!r.ok) {
+        throw new Error('bad fetch in PATCH')
+      }
+      await fetchColors()
+      message.textContent = 'Color Updated'
     } catch (error) { console.error(error) }
   }
 
