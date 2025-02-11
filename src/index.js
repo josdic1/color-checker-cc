@@ -119,7 +119,7 @@ const init = () => {
 <option value='tertiary'>Tertiary</option>
     </select>
     <div class='form-btn-menu'>
-      <button type="submit" name="submit" class="form-btn">✓ Submit</button> <button type="click" id="cancel" name="cancel" class="form-btn">Cancel</button>
+      <button type="submit" name="submit" class="form-btn">✓ Submit</button> <button type="button" id="cancel" name="cancel" class="form-btn">Cancel</button>
       </div>
       `
     form.innerHTML = formHtml
@@ -130,6 +130,7 @@ const init = () => {
     document.getElementById('codeInput').addEventListener('input', handleFormInput)
 
     document.getElementById('familyInput').addEventListener('input', handleFormInput)
+
 
     document.getElementById('cancel').addEventListener('click', handleCancelClick)
 
@@ -159,7 +160,7 @@ const init = () => {
   function handleSubmitClick(e) {
     e.preventDefault()
     const { name, value } = e.target
-    if (inEditMode && name === 'submit') {
+    if (inEditMode) {
       selectedColor = {
         ...selectedColor,
         color: document.getElementById('colorInput').value,
@@ -169,11 +170,8 @@ const init = () => {
       const updatedColor = selectedColor
       updateColor(updatedColor)
     } else {
-      if (!inEditMode && name === 'submit') {
-        const newColor = formData
-        createColor(newColor)
-      }
-      return;
+      const newColor = formData
+      createColor(newColor)
     }
   }
 
