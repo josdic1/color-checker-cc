@@ -4,7 +4,8 @@ const init = () => {
   let colors = []
   let formData = {
     color: '',
-    code: ''
+    code: '',
+    family: ''
   }
   let filterData = {
     color: '',
@@ -78,7 +79,7 @@ const init = () => {
       ...filterData,
       [name]: value
     }
-    console.log(filterData)
+
     const filterValues = filterData
     filterList(filterValues)
   }
@@ -118,7 +119,7 @@ const init = () => {
 <option value='tertiary'>Tertiary</option>
     </select>
     <div class='form-btn-menu'>
-      <button type="submit" name="submit" class="form-btn">✓ Submit</button> <button type="click" name="cancel" class="form-btn">Cancel</button>
+      <button type="submit" name="submit" class="form-btn">✓ Submit</button> <button type="click" id="cancel" name="cancel" class="form-btn">Cancel</button>
       </div>
       `
     form.innerHTML = formHtml
@@ -130,7 +131,11 @@ const init = () => {
 
     document.getElementById('familyInput').addEventListener('input', handleFormInput)
 
+    document.getElementById('cancel').addEventListener('click', handleCancelClick)
+
     form.addEventListener('submit', handleSubmitClick)
+
+
 
   }
 
@@ -142,10 +147,19 @@ const init = () => {
     }
   }
 
+  function handleCancelClick(e) {
+    const { id } = e.target
+    if (id === 'cancel') {
+      document.getElementById('colorInput').value = ""
+      document.getElementById('codeInput').value = ""
+      document.getElementById('familyInput').value = ""
+    }
+  }
+
   function handleSubmitClick(e) {
     e.preventDefault()
     const { name, value } = e.target
-    if (inEditMode) {
+    if (inEditMode && name === 'submit') {
       selectedColor = {
         ...selectedColor,
         color: document.getElementById('colorInput').value,
@@ -155,8 +169,11 @@ const init = () => {
       const updatedColor = selectedColor
       updateColor(updatedColor)
     } else {
-      const newColor = formData
-      createColor(newColor)
+      if (!inEditMode && name === 'submit') {
+        const newColor = formData
+        createColor(newColor)
+      }
+      return;
     }
   }
 
