@@ -1,3 +1,5 @@
+
+
 const init = () => {
 
   let inEditMode = false
@@ -17,10 +19,10 @@ const init = () => {
     code: '',
     family: ''
   }
-  let hex = "#3bb9b3"
+  let hex = "#FF5F15"
 
 
-  const message = document.getElementById('message')
+  const header = document.getElementById('header')
   const form = document.getElementById('form')
   const cube = document.getElementById('cube')
   const filter = document.getElementById('filter')
@@ -31,8 +33,8 @@ const init = () => {
   fetchColors()
 
 
-  function renderCube(code) {
 
+  function renderCube(code) {
     const cubeHtml =
       `<h1 id='sphere' class="fill-text" style="color: ${code}"> ■ ▣ ▧ </h1>`
 
@@ -55,7 +57,7 @@ const init = () => {
 <option value='secondary'>Secondary</option>
 <option value='tertiary'>Tertiary</option>
     </select>
-    <button type="button" id="clearFilterBtn" class="filter-btn" name='clear'>Clear Filter</button>
+    <button type="button" id="clearFilterBtn" name='clear'>Clear Filter</button>
     `
 
 
@@ -94,7 +96,7 @@ const init = () => {
 
   function handleClearFilterClick() {
     document.getElementById('colorInputFilter').value = ''
-    message.textContent = 'Filter Cleared'
+
     renderList(colors)
   }
 
@@ -284,13 +286,12 @@ const init = () => {
       deleteColor(id)
     } else {
       if (name === "view") {
-        hex = "#" + colorObj.code
-        renderCube(hex)
+        renderCube("#" + colorObj.code)
       } else {
         if (name === 'edit') {
           inEditMode = true
           selectedColor = colorObj
-          message.textContent = 'Edit Mode, selectedColor Set'
+          renderCube("#" + colorObj.code)
 
           //populate form with existing color
           document.getElementById('colorInput').value = colorObj.color
@@ -310,10 +311,10 @@ const init = () => {
       }
       const data = await r.json()
       colors = data
-      message.textContent = 'Colors Fetched'
+
       renderList(data)
       renderForm()
-      renderCube(hex)
+      renderCube("#efefef")
       renderFilter()
       renderSort()
     } catch (error) { console.error(error) }
@@ -332,7 +333,7 @@ const init = () => {
         throw new Error('bad fetch in POST')
       }
       await fetchColors()
-      message.textContent = 'New Color Created'
+
     } catch (error) { console.error(error) }
   }
 
@@ -345,7 +346,7 @@ const init = () => {
         throw new Error('bad fetch in DELETE')
       }
       await fetchColors()
-      message.textContent = 'Color Deleted'
+
     } catch (error) { console.error(error) }
   }
 
@@ -362,7 +363,6 @@ const init = () => {
         throw new Error('bad fetch in PATCH')
       }
       await fetchColors()
-      message.textContent = 'Color Updated'
     } catch (error) { console.error(error) }
   }
 

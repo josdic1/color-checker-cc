@@ -1,226 +1,67 @@
 :root {
+  --bg-color: white;
+  --text-color: black;
+  --btn-color: white;
+
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  color: var(--text-color);
+  background-color: var(--bg-color);
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
+/* Dark mode overrides */
+.dark-theme {
+  --bg-color: black;
+  --text-color: white;
+  --btn-color: black;
 }
 
 body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
   margin: 0;
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-direction: column; 
+  align-items: center; 
+  justify-content: flex-start;
   min-width: 320px;
   min-height: 100vh;
-  padding: 2rem;
+  padding: 1rem;
+  gap: 1rem; /* Adds space between elements */
 }
 
-#cube {
-  position: sticky;  
-  top: 20px;        
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.form-container, .cube-container {
-  width: 260px; /* More compact width */
-  padding: 12px;
-  background: rgb(245, 245, 245);
-  border-radius: 6px;
-  margin: 10px auto; /* Reduced margin */
-  text-align: center;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15); /* Soft shadow for depth */
-}
-
-#form {
-  display: flex;
-  flex-direction: column;
-  gap: 6px; /* Adds spacing between elements */
-}
-
-.form-title, .filter-title {
-  font-size: 1.1em;
-  color: #ff6f61;
-  margin-bottom: 5px; /* Small spacing */
-}
-
-.form-label {
-  font-size: 0.9em;
-  color: #0b0b34;
-}
-
-.form-input {
-  width: 100%;
-  padding: 6px;
-  font-size: 0.9em;
-  border: 1px solid #ccc;
-  background: white;
-  color: black;
-  border-radius: 4px;
-}
-
-.form-input:focus {
-  outline: 2px solid #646cff;
-  border-color: #646cff;
-}
-
-.form-button {
-  background: #646cff;
-  color: white;
-  padding: 8px;
-  font-size: 0.9em;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background 0.3s;
-}
-
-.form-button:hover {
-  background: #535bf2;
-}
-
-.filter-container {
-  width: flex; 
-  max-width: 600px; 
-  padding: 10px;
-  background: rgb(245, 245, 245);
-  border-radius: 6px;
-  margin: 10px auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-}
-
-#filter {
-  display: flex;
-  flex-direction: row;
-  gap: 10px;
-  width: 100%;
-  align-items: center;
-}
-
-.filter-input {
-  flex: 1; 
-  padding: 6px;
-  font-size: 0.9em;
-  border: 1px solid #ccc;
-  background: white;
-  color: black;
-  border-radius: 4px;
-}
-
-.filter-input:focus {
-  outline: 2px solid #646cff;
-  border-color: #646cff;
-}
-
-.filter-button {
-  background: #646cff;
-  color: white;
-  padding: 8px 12px;
-  font-size: 0.9em;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background 0.3s;
-}
-
-.filter-button:hover {
-  background: #535bf2;
-}
-
-
-button:hover {
-  background: darkblue;
-}
-
-
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-#app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-}
-
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vanilla:hover {
-  filter: drop-shadow(0 0 2em #f7df1eaa);
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
-}
-
-.fill-text {
-  font-size: 100px;
-  
-}
-
+/* Buttons will switch theme */
 button {
+  background-color: var(--btn-color);
+  color: var(--text-color);
   border-radius: 8px;
   border: 1px solid transparent;
   padding: 0.6em 1.2em;
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
   cursor: pointer;
   transition: border-color 0.25s;
 }
+
 button:hover {
   border-color: #646cff;
 }
+
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+#cube {
+  position: relative; 
+  top: 0; 
+  font-size: 30px;
 }
